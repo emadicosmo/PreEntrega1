@@ -26,13 +26,12 @@ router.get('/:cid', async (req, res) => {
 // Agregar un producto al carrito
 router.post('/:cid/product/:pid', async (req, res) => {
   try {
-    const cartId = req.params.cid;
-    const productId = req.params.pid;
-    const quantity = req.body.quantity || 1; // Si no se especifica, se agrega 1 por defecto
-    const updatedCart = await cartModel.addProductToCart(cartId, productId, quantity);
-    res.json(updatedCart);
+    const { cid, pid } = req.params;
+    // Aquí llamamos al método que verifica la existencia del producto antes de agregarlo al carrito
+    const cart = await cartModel.addProductToCart(cid, pid);
+    res.json(cart);
   } catch (error) {
-    res.status(404).json({ error: error.message });
+    res.status(400).json({ error: error.message });
   }
 });
 

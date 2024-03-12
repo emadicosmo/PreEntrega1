@@ -15,10 +15,9 @@ app.listen(PORT, () => {
 });
 
 
-const express = require('express');
 const router = express.Router();
-const productModel = require('../models/productModel');
-const cartModel = require('../models/cartModel');
+const productModel = require('./models/productModel');
+const cartModel = require('./models/cartModel');
 
 // Rutas para productos
 router.get('/', async (req, res) => {

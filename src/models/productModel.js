@@ -35,6 +35,12 @@ class ProductModel {
     try {
       const data = await fs.readFile(productsFilePath, 'utf-8');
       const products = JSON.parse(data);
+      
+      // Validación para evitar la creación de productos duplicados basados en el código del producto
+      const existingProduct = products.find(p => p.code === productData.code);
+      if (existingProduct) {
+        throw new Error('Ya existe un producto con el mismo código');
+      }
       const newProduct = { id: products.length + 1, ...productData };
       products.push(newProduct);
       await fs.writeFile(productsFilePath, JSON.stringify(products, null, 2));

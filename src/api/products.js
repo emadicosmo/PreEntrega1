@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const productModel = require('../models/productModel');
+const productModel = require('./models/productModel');
 
 // Listar todos los productos
 router.get('/', async (req, res) => {
@@ -16,9 +16,12 @@ router.get('/', async (req, res) => {
 router.get('/:pid', async (req, res) => {
   try {
     const product = await productModel.getProductById(req.params.pid);
+    if (!product) {
+      return res.status(404).json({ error: 'Producto no encontrado' });
+    }
     res.json(product);
   } catch (error) {
-    res.status(404).json({ error: 'Producto no encontrado' });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -32,13 +35,16 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Actualizar un producto existente
+// PUT /api/products/:pid
 router.put('/:pid', async (req, res) => {
   try {
     const updatedProduct = await productModel.updateProduct(req.params.pid, req.body);
+    if (!updatedProduct) {
+      return res.status(404).json({ error: 'Producto no encontrado' });
+    }
     res.json(updatedProduct);
   } catch (error) {
-    res.status(404).json({ error: 'Producto no encontrado' });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -48,7 +54,7 @@ router.delete('/:pid', async (req, res) => {
     await productModel.deleteProduct(req.params.pid);
     res.status(204).end();
   } catch (error) {
-    res.status(404).json({ error: 'Producto no encontrado' });
+    res.status(500).json({ error: error.message });
   }
 });
 

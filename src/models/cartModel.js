@@ -1,7 +1,7 @@
 const fs = require('fs').promises;
 const path = require('path');
 
-const cartsFilePath = path.join(__dirname, '../data/carrito.json');
+const cartsFilePath = path.join(__dirname, './data/carrito.json');
 
 class CartModel {
   async createCart() {
@@ -24,17 +24,22 @@ class CartModel {
     }
   }
 
-  async addProductToCart(cartId, productId, quantity = 1) {
+  async addProductToCart(cartId, productId) {
     try {
-      const data = await fs.readFile(cartsFilePath, 'utf-8');
-      const cart = JSON.parse(data);
-      const productIndex = cart.products.findIndex(p => p.id === productId);
+      const cartData = await fs.readFile(cartFilePath, 'utf-8');
+      let cart = JSON.parse(cartData);
+      
+      // Verificar si el producto ya está en el carrito
+      const productIndex = cart.products.findIndex(item => item.id === productId);
       if (productIndex !== -1) {
-        cart.products[productIndex].quantity += quantity;
+        // Incrementar la cantidad si el producto ya está en el carrito
+        cart.products[productIndex].quantity++;
       } else {
-        cart.products.push({ id: productId, quantity });
+        // Agregar el producto al carrito si no está presente
+        cart.products.push({ id: productId, quantity: 1 });
       }
-      await fs.writeFile(cartsFilePath, JSON.stringify(cart, null, 2));
+
+      await fs.writeFile(cartFilePath, JSON.stringify(cart, null, 2));
       return cart;
     } catch (error) {
       throw new Error('No se pudo agregar el producto al carrito');
