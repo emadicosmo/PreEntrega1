@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const cartModel = require('../models/cartModel');
+const cartModel = require('./models/cartModel');
 
 // Crear un nuevo carrito
 router.post('/', async (req, res) => {

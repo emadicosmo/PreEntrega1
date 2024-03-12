@@ -1,7 +1,7 @@
 const fs = require('fs').promises;
 const path = require('path');
 
-const productsFilePath = path.join(__dirname, '../data/productos.json');
+const productsFilePath = path.join(__dirname, './data/productos.json');
 
 class ProductModel {
   async getAllProducts(limit) {
